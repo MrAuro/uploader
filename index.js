@@ -2,6 +2,11 @@ const express = require("express");
 var multer = require("multer");
 const fs = require("fs");
 const app = express();
+const dotenv = require("dotenv");
+dotenv.config();
+
+const KEY = process.env.KEY;
+const PORT = process.env.PORT || 9005;
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -54,27 +59,59 @@ setInterval(deleteOldUploads, 1000 * 60 * 60 * 2);
 
 const upload = multer({ storage: storage });
 
-app.post("/profile", upload.single("avatar"), function (req, res, next) {
-    // req.file is the `avatar` file
-    // req.body will hold the text fields, if there were any
-    console.log(req.file);
-    res.json(req.file.filename);
-});
-
 // return the avatar as the correct file type
-app.get("/profile/:filename", function (req, res, next) {
+app.get("/:filename", function (req, res, next) {
+    // santize filename
+    const filename = req.params.filename.replace(/[^a-zA-Z0-9.]/g, "");
+
     // check if file exists
-    fs.exists(`./uploads/${req.params.filename}`, function (exists) {
+    fs.exists(`./uploads/${filename}`, function (exists) {
         if (exists) {
-            res.sendFile(__dirname + `/uploads/${req.params.filename}`);
+            res.sendFile(__dirname + `/uploads/${filename}`);
         } else {
             res.status(404).send("File not found");
         }
     });
 });
 
-app.listen(9005, () => {
-    console.log("Server started on port 3000");
+// check if the Authorization header matches KEY
+app.use("/", function (req, res, next) {
+    if (req.headers.authorization === KEY) {
+        return next();
+    }
+    res.status(401);
+});
+
+app.post("/", upload.single("attachment"), function (req, res, next) {
+    console.log(req.file);
+    let url = `http://${req.headers.host}/${req.file.filename}`;
+    res.send({
+        url,
+    });
+});
+
+app.delete("/:filename", function (req, res, next) {
+    // santize filename
+    const filename = req.params.filename.replace(/[^a-zA-Z0-9.]/g, "");
+
+    // check if file exists
+    fs.exists(`./uploads/${filename}`, function (exists) {
+        if (exists) {
+            fs.unlink(`./uploads/${filename}`, (err) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+            });
+            res.send("File deleted");
+        } else {
+            res.status(404).send("File not found");
+        }
+    });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
 });
 
 function randomString() {
