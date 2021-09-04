@@ -1,0 +1,42 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\Auro\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js init
+
+PATH: 
+  C:\Program Files (x86)\Common Files\Intel\Shared Libraries\redist\intel64\compiler;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Oculus\Support\oculus-runtime;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\Microsoft VS Code\bin;C:\ProgramData\chocolatey\bin;C:\Program Files\dotnet\;C:\Program Files\Git\cmd;C:\Program Files\PuTTY\;C:\Program Files\Go\bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Users\Auro\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\ProgramData\chocolatey\lib\mpv.install\tools;C:\Program Files (x86)\Streamlink\bin;C:\Program Files\Redis\;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\CMake\bin;C:\Program Files\nodejs\;C:\Users\Auro\Documents\twitch.exe;C:\Users\Auro\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\Auro\AppData\Local\Programs\Python\Python39\;C:\Users\Auro\scoop\shims;C:\Users\Auro\AppData\Local\Streamlink\bin;C:\Program Files (x86)\Elm\0.19.1\bin;C:\Users\Auro\AppData\Local\Microsoft\WindowsApps;C:\Users\Auro\AppData\Local\GitHubDesktop\bin;C:\Users\Auro\.dotnet\tools;C:\Users\Auro\go\bin;C:\Program Files\Oracle\VirtualBox;C:\Program Files\heroku\bin;C:\Program Files\LLVM\bin;C:\Users\Auro\AppData\Local\Gource\cmd;C:\Program Files\Neovim\bin;C:\Users\Auro\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\Auro\AppData\Local\Programs\Microsoft VS Code\bin;C:\local\bin;C:\Users\Auro\AppData\Roaming\npm;C:\Users\Auro\Documents\twitch.exe;C:\Users\Auro\Documents\ffmpeg-N-103380-ge41bd075dd-win64-gpl\ffmpeg-N-103380-ge41bd075dd-win64-gpl\bin\;C:\Program Files\eSpeak NG\espeak-ng.exe;C:\Users\Auro\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\Scripts;
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  16.6.2
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: canceled
+      at Interface.<anonymous> (C:\Users\Auro\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:136216:13)
+      at Interface.emit (node:events:394:28)
+      at Interface._ttyWrite (node:readline:1081:16)
+      at ReadStream.onkeypress (node:readline:288:10)
+      at ReadStream.emit (node:events:394:28)
+      at emitKeys (node:internal/readline/utils:358:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (node:internal/readline/emitKeypressEvents:61:36)
+      at ReadStream.emit (node:events:394:28)
+      at addChunk (node:internal/streams/readable:312:12)
+
+npm manifest: 
+  {
+    "name": "file",
+    "version": "1.0.0",
+    "main": "index.js",
+    "author": "Auro <35087590+MrAuro@users.noreply.github.com>",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
