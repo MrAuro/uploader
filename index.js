@@ -85,7 +85,7 @@ app.use("/", function (req, res, next) {
 
 app.post("/", upload.single("attachment"), function (req, res, next) {
     console.log(req.file);
-    let url = `http://${URL}/${req.file.filename}`;
+    let url = `https://${URL}/${req.file.filename}`;
     res.send({
         url,
     });
