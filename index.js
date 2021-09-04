@@ -7,6 +7,7 @@ dotenv.config();
 
 const KEY = process.env.KEY;
 const PORT = process.env.PORT || 9005;
+const URL = process.env.URL;
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -84,7 +85,7 @@ app.use("/", function (req, res, next) {
 
 app.post("/", upload.single("attachment"), function (req, res, next) {
     console.log(req.file);
-    let url = `http://${req.headers.host}/${req.file.filename}`;
+    let url = `http://${URL}/${req.file.filename}`;
     res.send({
         url,
     });
