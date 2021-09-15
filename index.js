@@ -90,13 +90,10 @@ app.get("/:filename", function (req, res, next) {
                     stats.size += fs.statSync(`./uploads/${file}`).size;
                 });
 
-                res.send(
-                    JSON.stringify({
-                        size:
-                            Math.round((stats.size / 1024 / 1024) * 100) / 100,
-                        count: stats.count,
-                    })
-                );
+                res.send({
+                    size: Math.round((stats.size / 1024 / 1024) * 100) / 100,
+                    count: stats.count,
+                });
             });
         } else {
             res.status(404).send("File not found");
