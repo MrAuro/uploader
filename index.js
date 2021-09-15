@@ -72,6 +72,32 @@ app.get("/:filename", function (req, res, next) {
     fs.exists(`./uploads/${filename}`, function (exists) {
         if (exists) {
             res.sendFile(__dirname + `/uploads/${filename}`);
+        } else if (filename === "stats") {
+            // this is a horrible way to recieve the /stats/ route but it works
+            fs.readdir("./uploads", (err, files) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+
+                const stats = {
+                    size: 0,
+                    count: 0,
+                };
+
+                files.forEach((file) => {
+                    stats.count++;
+                    stats.size += fs.statSync(`./uploads/${file}`).size;
+                });
+
+                res.send(
+                    JSON.stringify({
+                        size:
+                            Math.round((stats.size / 1024 / 1024) * 100) / 100,
+                        count: stats.count,
+                    })
+                );
+            });
         } else {
             res.status(404).send("File not found");
         }
