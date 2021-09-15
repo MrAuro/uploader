@@ -33,24 +33,27 @@ const deleteOldUploads = () => {
         }
 
         files.forEach((file) => {
-            fs.stat(`./uploads/${file}`, (err, stats) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
+            // ND = non deletion, so dont delete them
+            if (!file.startsWith("ND-")) {
+                fs.stat(`./uploads/${file}`, (err, stats) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
 
-                if (
-                    stats.isFile() &&
-                    stats.ctime < Date.now() - 1000 * 60 * 60 * 24 * 30
-                ) {
-                    fs.unlink(`./uploads/${file}`, (err) => {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        }
-                    });
-                }
-            });
+                    if (
+                        stats.isFile() &&
+                        stats.ctime < Date.now() - 1000 * 60 * 60 * 24 * 30
+                    ) {
+                        fs.unlink(`./uploads/${file}`, (err) => {
+                            if (err) {
+                                console.log(err);
+                                return;
+                            }
+                        });
+                    }
+                });
+            }
         });
     });
 };
@@ -63,7 +66,7 @@ const upload = multer({ storage: storage });
 // return the avatar as the correct file type
 app.get("/:filename", function (req, res, next) {
     // santize filename
-    const filename = req.params.filename.replace(/[^a-zA-Z0-9.]/g, "");
+    const filename = req.params.filename.replace(/[^a-zA-Z0-9.\-]/g, "");
 
     // check if file exists
     fs.exists(`./uploads/${filename}`, function (exists) {
@@ -92,8 +95,7 @@ app.post("/", upload.single("attachment"), function (req, res, next) {
 });
 
 app.delete("/:filename", function (req, res, next) {
-    // santize filename
-    const filename = req.params.filename.replace(/[^a-zA-Z0-9.]/g, "");
+    const filename = req.params.filename.replace(/[^a-zA-Z0-9.\-]/g, "");
 
     // check if file exists
     fs.exists(`./uploads/${filename}`, function (exists) {
