@@ -11,16 +11,32 @@ const URL = process.env.URL;
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, './uploads/');
+		if (req.params.filename) {
+			cb(null, './perm/');
+		} else {
+			cb(null, './uploads/');
+		}
 	},
 	filename: function (req, file, cb) {
 		const fileExtension = file.originalname.split('.').pop();
-		let fileName = `${randomString()}.${fileExtension}`;
-		while (fs.existsSync(`./uploads/${fileName}`)) {
-			fileName = `${randomString()}.${fileExtension}`;
-		}
+		if (req.params.filename) {
+			if (fs.existsSync(`./perm/${req.params.filename}.${fileExtension}`)) {
+				fs.renameSync(
+					`./perm/${req.params.filename}.${fileExtension}`,
+					`./perm/${req.params.filename}-${Date.now()}.${fileExtension}`
+				);
+				cb(null, `${req.params.filename}.${fileExtension}`);
+			} else {
+				cb(null, `${req.params.filename}.${fileExtension}`);
+			}
+		} else {
+			let fileName = `${randomString()}.${fileExtension}`;
+			while (fs.existsSync(`./uploads/${fileName}`)) {
+				fileName = `${randomString()}.${fileExtension}`;
+			}
 
-		cb(null, `${fileName}`);
+			cb(null, `${fileName}`);
+		}
 	},
 });
 
@@ -60,42 +76,58 @@ setInterval(deleteOldUploads, 1000 * 60 * 60 * 2);
 
 const upload = multer({ storage: storage });
 
-// return the avatar as the correct file type
 app.get('/:filename', function (req, res, next) {
 	// santize filename
 	const filename = req.params.filename.replace(/[^a-zA-Z0-9.\-]/g, '');
 
-	// check if file exists
-	fs.exists(`./uploads/${filename}`, function (exists) {
-		if (exists) {
-			res.sendFile(__dirname + `/uploads/${filename}`);
-		} else if (filename === 'stats') {
-			// this is a horrible way to recieve the /stats/ route but it works
-			fs.readdir('./uploads', (err, files) => {
-				if (err) {
-					console.log(err);
-					return;
-				}
+	const exists = fs.existsSync(`./uploads/${filename}`);
+	const usePerm = fs.existsSync(`./perm/${filename}`);
 
-				const stats = {
-					size: 0,
-					count: 0,
-				};
+	console.log(exists, usePerm);
 
-				files.forEach((file) => {
-					stats.count++;
-					stats.size += fs.statSync(`./uploads/${file}`).size;
-				});
+	if (exists) {
+		res.sendFile(__dirname + `/uploads/${filename}`);
+	} else if (usePerm) {
+		res.sendFile(__dirname + `/perm/${filename}`);
+	} else if (filename === 'stats') {
+		fs.readdir('./uploads', (err, files) => {
+			if (err) {
+				console.log(err);
+				return;
+			}
 
-				res.send({
-					size: Math.round((stats.size / 1024 / 1024) * 100) / 100,
-					count: stats.count,
-				});
+			const stats = {
+				size: 0,
+				count: 0,
+			};
+
+			files.forEach((file) => {
+				stats.count++;
+				stats.size += fs.statSync(`./uploads/${file}`).size;
 			});
-		} else {
-			res.status(404).send('File not found');
-		}
-	});
+
+			res.send({
+				size: Math.round((stats.size / 1024 / 1024) * 100) / 100,
+				count: stats.count,
+			});
+		});
+	} else {
+		res.status(404).send(`
+        <html>
+            <head>
+                <title>File Not Found</title>
+                <link rel="icon" href="https://cdn.7tv.app/emote/60b65aefbfd59d76c742eaac/3x" />
+            </head>
+            <body>
+		        <img
+			        src="https://cdn.7tv.app/emote/60b65aefbfd59d76c742eaac/3x"
+			        style="display: block; margin-left: auto; margin-right: auto; width: 20%"
+                />
+		        <h1 style="text-align: center">File not found</h1>
+	        </body>
+        </html>
+        `);
+	}
 });
 
 // check if the Authorization header matches KEY
@@ -106,7 +138,7 @@ app.use('/', function (req, res, next) {
 	res.status(401);
 });
 
-app.post('/', upload.single('attachment'), function (req, res, next) {
+app.post('/:filename?', upload.single('attachment'), function (req, res, next) {
 	console.log(req.file);
 	let url = `https://${URL}/${req.file.filename}`;
 	res.send({
@@ -117,20 +149,70 @@ app.post('/', upload.single('attachment'), function (req, res, next) {
 app.delete('/:filename', function (req, res, next) {
 	const filename = req.params.filename.replace(/[^a-zA-Z0-9.\-]/g, '');
 
-	// check if file exists
-	fs.exists(`./uploads/${filename}`, function (exists) {
-		if (exists) {
-			fs.unlink(`./uploads/${filename}`, (err) => {
-				if (err) {
-					console.log(err);
-					return;
-				}
-			});
-			res.send('File deleted');
-		} else {
-			res.status(404).send('File not found');
-		}
-	});
+	const exists = fs.existsSync(`./uploads/${filename}`);
+	const usePerm = fs.existsSync(`./perm/${filename}`);
+
+	if (exists) {
+		fs.unlink(`./uploads/${filename}`, (err) => {
+			if (err) {
+				console.log(err);
+				return;
+			}
+		});
+		res.send(`
+            <html>
+                <head>
+                    <title>File deleted</title>
+                    <link rel="icon" href="https://cdn.7tv.app/emote/6040aa41cf6746000db1034e/3x" />
+                </head>
+                <body>
+                    <img
+                        src="https://cdn.7tv.app/emote/6040aa41cf6746000db1034e/3x"
+                        style="display: block; margin-left: auto; margin-right: auto; width: 20%"
+                    />
+                    <h1 style="text-align: center">File deleted</h1>
+                </body>
+            </html>
+            `);
+	} else if (usePerm) {
+		fs.unlink(`./perm/${filename}`, (err) => {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			res.send(`
+            <html>
+                <head>
+                    <title>File deleted</title>
+                    <link rel="icon" href="https://cdn.7tv.app/emote/6040aa41cf6746000db1034e/3x" />
+                </head>
+                <body>
+                    <img
+                        src="https://cdn.7tv.app/emote/6040aa41cf6746000db1034e/3x"
+                        style="display: block; margin-left: auto; margin-right: auto; width: 20%"
+                    />
+                    <h1 style="text-align: center">File deleted</h1>
+                </body>
+            </html>
+            `);
+		});
+	} else {
+		res.status(404).send(`
+        <html>
+            <head>
+                <title>File Not Found</title>
+                <link rel="icon" href="https://cdn.7tv.app/emote/60b65aefbfd59d76c742eaac/3x" />
+            </head>
+            <body>
+		        <img
+			        src="https://cdn.7tv.app/emote/60b65aefbfd59d76c742eaac/3x"
+			        style="display: block; margin-left: auto; margin-right: auto; width: 20%"
+                />
+		        <h1 style="text-align: center">File not found</h1>
+	        </body>
+        </html>
+        `);
+	}
 });
 
 app.listen(PORT, () => {
