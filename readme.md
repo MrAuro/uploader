@@ -11,5 +11,5 @@ PORT=1234 // Optional port for where to start the server. Default is 9005
 3. Start the server. `node index.js`
 
 ## Chatterino Uploader:
-![Chatterino Uploader Example](https://i.mmatt.link/2dTpe.png)
+<img width="703" alt="Chatterino Uploader Example" src="https://user-images.githubusercontent.com/30363562/135737054-826c39c1-4bdb-45e2-9d46-ce2958039201.png">
 
