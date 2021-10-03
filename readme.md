@@ -1,11 +1,12 @@
-# Auro Uploader
+# uploader
 
 ## Setup:
-1. Install dependencies `yarn`
+1. Install dependencies `yarn` or `npm install`
 2. Create a `.env` file containing these keys:
 ```
-key=PRIVATE_KEY // This is used for Authorizing your upload requests.
+KEY=PRIVATE_KEY // This is used for authorizing your upload requests.
 URL=YOUR_DOMAIN
+PORT=1234 // Optional port for where to start the server. Default is 9005
 ```
 3. Start the server. `node index.js`
 
