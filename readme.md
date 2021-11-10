@@ -1,5 +1,9 @@
 # uploader
 
+Use my DigitalOcean Referral Link and get $100 in credits that you can use to host this uploader
+
+[![DigitalOcean Referral Badge](https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%203.svg)](https://www.digitalocean.com/?refcode=e6c78db47212&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge)
+
 ## Setup:
 1. Install dependencies `yarn` or `npm install`
 2. Create a `.env` file containing these keys:
