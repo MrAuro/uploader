@@ -77,6 +77,8 @@ setInterval(deleteOldUploads, 1000 * 60 * 60 * 2);
 const upload = multer({ storage: storage });
 
 app.get('/:filename', function (req, res, next) {
+	console.log(`Requesting ${req.params.filename}`);
+
 	// santize filename
 	const filename = req.params.filename.replace(/[^a-zA-Z0-9.\-]/g, '');
 
@@ -86,8 +88,12 @@ app.get('/:filename', function (req, res, next) {
 	console.log(exists, usePerm);
 
 	if (exists) {
+		console.log(`Sending ${filename}`);
+
 		res.sendFile(__dirname + `/uploads/${filename}`);
 	} else if (usePerm) {
+		console.log(`Sending ${filename}`);
+
 		res.sendFile(__dirname + `/perm/${filename}`);
 	} else if (filename === 'stats') {
 		fs.readdir('./uploads', (err, files) => {
