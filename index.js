@@ -99,7 +99,7 @@ app.post('/paste', (req, res) => {
 			return res.send(500).send('Internal Server Error');
 		}
 
-		res.redirect(`${URL}/${fileName}`);
+		res.redirect(`/${fileName}`);
 	});
 });
 
