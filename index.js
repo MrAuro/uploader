@@ -7,7 +7,9 @@ dotenv.config();
 
 const KEY = process.env.KEY;
 const PORT = process.env.PORT || 9005;
-const URL = process.env.URL;
+const URL = process.env.URL || `http://localhost:${PORT}`;
+
+if (!KEY) throw new Error('No KEY found in .env');
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -74,7 +76,32 @@ const deleteOldUploads = () => {
 // every 2 hours delete old uploads
 setInterval(deleteOldUploads, 1000 * 60 * 60 * 2);
 
+app.use(express.urlencoded({ extended: true }));
+
 const upload = multer({ storage: storage });
+
+app.get('/', (req, res) => {
+	res.sendFile(__dirname + '/paste_form.html');
+});
+
+app.post('/paste', (req, res) => {
+	console.log(req.body);
+	if (req.body.key !== KEY) return res.send(401).send('Invalid API Key');
+
+	let fileName = randomString() + '.txt';
+	while (fs.existsSync(`./uploads/${fileName}`)) {
+		fileName = randomString() + '.txt';
+	}
+
+	fs.writeFile(`./uploads/${fileName}`, req.body.text, (err) => {
+		if (err) {
+			console.log(err);
+			return res.send(500).send('Internal Server Error');
+		}
+
+		res.redirect(`${URL}/${fileName}`);
+	});
+});
 
 app.get('/:filename', function (req, res, next) {
 	console.log(`Requesting ${req.params.filename}`);
