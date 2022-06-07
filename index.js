@@ -225,7 +225,7 @@ app.post('/shorten/:url', (req, res) => {
 		}
 
 		res.send({
-			url: `${URL}/${fileName}`,
+			url: `https://${URL}/${fileName}`,
 		});
 	});
 });
