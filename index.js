@@ -114,8 +114,10 @@ app.get('/:filename', function (req, res, next) {
 	const filename = req.params.filename.replace(/[^a-zA-Z0-9.\-]/g, '');
 
 	const shortenExists = fs.existsSync(`./urls/${filename}`);
+	const exists = fs.existsSync(`./uploads/${filename}`);
+	const usePerm = fs.existsSync(`./perm/${filename}`);
 
-	if (!shortenExists)
+	if (!shortenExists && !exists && !usePerm)
 		return res.status(404).send(`
         <html>
             <head>
@@ -137,9 +139,6 @@ app.get('/:filename', function (req, res, next) {
 		const url = fs.readFileSync(`./urls/${filename}`, 'utf8');
 		return res.redirect(url);
 	}
-
-	const exists = fs.existsSync(`./uploads/${filename}`);
-	const usePerm = fs.existsSync(`./perm/${filename}`);
 
 	console.log(exists, usePerm);
 
