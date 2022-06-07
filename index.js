@@ -117,16 +117,16 @@ app.get('/:filename', function (req, res, next) {
 	const exists = fs.existsSync(`./uploads/${filename}`);
 	const usePerm = fs.existsSync(`./perm/${filename}`);
 
-	if (!shortenExists && !exists && !usePerm)
+	if (!shortenExists && !exists && !usePerm && filename !== 'stats')
 		return res.status(404).send(`
         <html>
             <head>
                 <title>File Not Found</title>
-                <link rel="icon" href="https://cdn.7tv.app/emote/60b65aefbfd59d76c742eaac/3x" />
+                <link rel="icon" href="https://i.nuuls.com/xZdaf.gif" />
             </head>
             <body>
 		        <img
-			        src="https://cdn.7tv.app/emote/60b65aefbfd59d76c742eaac/3x"
+			        src="https://i.nuuls.com/xZdaf.gif"
 			        style="display: block; margin-left: auto; margin-right: auto; width: 20%"
                 />
 		        <h1 style="text-align: center">File not found</h1>
@@ -135,7 +135,7 @@ app.get('/:filename', function (req, res, next) {
         `);
 
 	// if no dot then no extension then its a shortened url
-	if (!filename.includes('.')) {
+	if (!filename.includes('.') && filename !== 'stats') {
 		const url = fs.readFileSync(`./urls/${filename}`, 'utf8');
 		return res.redirect(url);
 	}
@@ -177,11 +177,11 @@ app.get('/:filename', function (req, res, next) {
         <html>
             <head>
                 <title>File Not Found</title>
-                <link rel="icon" href="https://cdn.7tv.app/emote/60b65aefbfd59d76c742eaac/3x" />
+                <link rel="icon" href="https://i.nuuls.com/xZdaf.gif" />
             </head>
             <body>
 		        <img
-			        src="https://cdn.7tv.app/emote/60b65aefbfd59d76c742eaac/3x"
+			        src="https://i.nuuls.com/xZdaf.gif"
 			        style="display: block; margin-left: auto; margin-right: auto; width: 20%"
                 />
 		        <h1 style="text-align: center">File not found</h1>
@@ -284,11 +284,11 @@ app.delete('/:filename', function (req, res, next) {
         <html>
             <head>
                 <title>File Not Found</title>
-                <link rel="icon" href="https://cdn.7tv.app/emote/60b65aefbfd59d76c742eaac/3x" />
+                <link rel="icon" href="https://i.nuuls.com/xZdaf.gif" />
             </head>
             <body>
 		        <img
-			        src="https://cdn.7tv.app/emote/60b65aefbfd59d76c742eaac/3x"
+			        src="https://i.nuuls.com/xZdaf.gif"
 			        style="display: block; margin-left: auto; margin-right: auto; width: 20%"
                 />
 		        <h1 style="text-align: center">File not found</h1>
