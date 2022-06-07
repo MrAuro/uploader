@@ -11,6 +11,10 @@ const URL = process.env.URL || `http://localhost:${PORT}`;
 
 if (!KEY) throw new Error('No KEY found in .env');
 
+if (!fs.existsSync('./uploads')) fs.mkdirSync('./uploads');
+if (!fs.existsSync('./perm')) fs.mkdirSync('./perm');
+if (!fs.existsSync('./urls')) fs.mkdirSync('./urls');
+
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		if (req.params.filename) {
@@ -109,6 +113,31 @@ app.get('/:filename', function (req, res, next) {
 	// santize filename
 	const filename = req.params.filename.replace(/[^a-zA-Z0-9.\-]/g, '');
 
+	const shortenExists = fs.existsSync(`./urls/${filename}`);
+
+	if (!shortenExists)
+		return res.status(404).send(`
+        <html>
+            <head>
+                <title>File Not Found</title>
+                <link rel="icon" href="https://cdn.7tv.app/emote/60b65aefbfd59d76c742eaac/3x" />
+            </head>
+            <body>
+		        <img
+			        src="https://cdn.7tv.app/emote/60b65aefbfd59d76c742eaac/3x"
+			        style="display: block; margin-left: auto; margin-right: auto; width: 20%"
+                />
+		        <h1 style="text-align: center">File not found</h1>
+	        </body>
+        </html>
+        `);
+
+	// if no dot then no extension then its a shortened url
+	if (!filename.includes('.')) {
+		const url = fs.readFileSync(`./urls/${filename}`, 'utf8');
+		return res.redirect(url);
+	}
+
 	const exists = fs.existsSync(`./uploads/${filename}`);
 	const usePerm = fs.existsSync(`./perm/${filename}`);
 
@@ -176,6 +205,28 @@ app.post('/:filename?', upload.single('attachment'), function (req, res, next) {
 	let url = `https://${URL}/${req.file.filename}`;
 	res.send({
 		url,
+	});
+});
+
+app.post('/shorten/:url', (req, res) => {
+	const url = req.params.url;
+	if (!url) return res.send(400).send('Invalid URL');
+
+	let fileName = randomString();
+
+	while (fs.existsSync(`./urls/${fileName}`)) {
+		fileName = randomString();
+	}
+
+	fs.writeFile(`./urls/${fileName}`, url, (err) => {
+		if (err) {
+			console.log(err);
+			return res.send(500).send('Internal Server Error');
+		}
+
+		res.send({
+			url: `${URL}/${fileName}`,
+		});
 	});
 });
 
