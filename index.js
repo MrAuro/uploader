@@ -142,6 +142,8 @@ app.get('/:filename', function (req, res, next) {
 
 	console.log(exists, usePerm);
 
+	res.set("Access-Control-Allow-Origin", "*")
+
 	if (exists) {
 		console.log(`Sending ${filename}`);
 
