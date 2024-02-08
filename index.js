@@ -111,7 +111,7 @@ app.get('/:filename', function (req, res, next) {
 	console.log(`Requesting ${req.params.filename}`);
 
 	// santize filename
-	const filename = req.params.filename.replace(/[^a-zA-Z0-9.\-]/g, '');
+	const filename = req.params.filename.replace(/[^a-zA-Z0-9.\-_]/g, '');
 
 	const shortenExists = fs.existsSync(`./urls/${filename}`);
 	const exists = fs.existsSync(`./uploads/${filename}`);
