@@ -92,7 +92,8 @@ app.post('/paste', (req, res) => {
 	console.log(req.body);
 	if (req.body.key !== KEY) return res.send(401).send('Invalid API Key');
 
-	let fileName = randomString() + '.txt';
+	let fileName = req.body.filename || randomString() + '.txt';
+
 	while (fs.existsSync(`./uploads/${fileName}`)) {
 		fileName = randomString() + '.txt';
 	}

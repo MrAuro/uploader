@@ -1,79 +1,99 @@
 <html>
-	<head>
-		<title>Paste</title>
-		<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" />
-	</head>
-	<body>
-		<h1>Uploader Paste</h1>
-		<form action="/paste" method="POST">
-			<textarea name="text" rows="10" cols="50"></textarea>
-			<input type="password" name="key" placeholder="API Key" required />
-			<input type="submit" value="Upload" />
-		</form>
-	</body>
+  <head>
+    <title>Paste</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <h1>Uploader Paste</h1>
+    <form action="/paste" method="POST">
+      <textarea name="text" rows="10" cols="50"></textarea>
+      <input
+        type="text"
+        placeholder="Leave blank for random"
+        name="filename"
+        placeholder="File Name"
+      />
+      <input type="password" name="key" placeholder="API Key" required />
+      <input type="submit" value="Upload" />
+    </form>
+  </body>
 </html>
 <style>
-	body {
-		font: 400 1em/1.5em 'Roboto', sans-serif;
-		font-size: 13px;
-		line-height: 1.5;
-		color: #fafafa;
-		background-color: #141516;
-		padding: 10px;
-	}
+  body {
+    font: 400 1em/1.5em "Roboto", sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #fafafa;
+    background-color: #141516;
+    padding: 10px;
+  }
 
-	h1 {
-		font-size: 2em;
-		font-weight: 500;
-		color: #fafafa;
-		margin: 0;
-		padding: 5px;
-		text-align: center;
-	}
+  h1 {
+    font-size: 2em;
+    font-weight: 500;
+    color: #fafafa;
+    margin: 0;
+    padding: 5px;
+    text-align: center;
+  }
 
-	form {
-		margin: 0 auto;
-		width: 90%;
-	}
+  form {
+    margin: 0 auto;
+    width: 90%;
+  }
 
-	input[type='submit'] {
-		margin: 0 auto;
-		display: block;
-		background-color: #101111;
-		color: #fafafa;
-		border: none;
-		border-radius: 3px;
-		font-family: 'Roboto', sans-serif;
-		padding: 7px;
-		width: 30%;
-	}
+  input[type="submit"] {
+    margin: 5 auto;
+    display: block;
+    background-color: #101111;
+    color: #fafafa;
+    border: none;
+    border-radius: 3px;
+    font-family: "Roboto", sans-serif;
+    padding: 7px;
+    width: 30%;
+  }
 
-	input[type='submit']:hover {
-		background-color: #1d1e1f;
-	}
+  input[type="submit"]:hover {
+    background-color: #1d1e1f;
+  }
 
-	input[type='password'] {
-		margin: 0 auto;
-		display: block;
-		background-color: #101111;
-		color: #fafafa;
-		border: none;
-		border-radius: 3px;
-		padding: 7px;
-		width: 30%;
-		font-family: 'Roboto', sans-serif;
-	}
+  input[type="password"] {
+    margin: 5 auto;
+    display: block;
+    background-color: #101111;
+    color: #fafafa;
+    border: none;
+    border-radius: 3px;
+    padding: 7px;
+    width: 30%;
+    font-family: "Roboto", sans-serif;
+  }
+  input[type="text"] {
+    margin: 5 auto;
+    display: block;
+    background-color: #101111;
+    color: #fafafa;
+    border: none;
+    border-radius: 3px;
+    padding: 7px;
+    width: 30%;
+    font-family: "Roboto", sans-serif;
+  }
 
-	textarea {
-		width: 100%;
-		height: 50%;
-		border-radius: 5px;
-		border: none;
-		background-color: #1d1e1f;
-		color: #fafafa;
-		font-family: 'Roboto', sans-serif;
-		outline: none;
-		resize: none;
-		scrollbar-width: thin;
-	}
+  textarea {
+    width: 100%;
+    height: 50%;
+    border-radius: 5px;
+    border: none;
+    background-color: #1d1e1f;
+    color: #fafafa;
+    font-family: "Roboto", sans-serif;
+    outline: none;
+    resize: none;
+    scrollbar-width: thin;
+  }
 </style>
